@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>혈당관리 - 간단</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>혈당 기록</h1>
+
+    <form id="recordForm">
+      <label>혈당 (mg/dL)
+        <input type="number" id="glucose" name="glucose" min="0" step="0.1" required>
+      </label>
+
+      <label>일시 (변경 가능)
+        <input type="datetime-local" id="datetime" name="datetime" step="1">
+      </label>
+
+      <label>메모
+        <input type="text" id="note" name="note" placeholder="선택 입력">
+      </label>
+
+      <div class="actions">
+        <button type="submit">저장</button>
+        <button type="button" id="exportCsv">CSV 내보내기</button>
+        <button type="button" id="clearAll">모두 삭제</button>
+      </div>
+    </form>
+
+    <section>
+      <h2>기록 목록</h2>
+      <div id="stats"></div>
+      <ul id="recordList"></ul>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
