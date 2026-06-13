@@ -104,11 +104,6 @@
     });
   }
 
-  function exportCsv(){
-    // CSV 내보내기는 간단하게 localStorage에서만 지원 (필요시 확장)
-    alert('CSV 내보내기는 기반 적용 중입니다.');
-  }
-
   function clearAll(){
     if(!confirm('모든 기록을 삭제하시겠습니까?')) return;
     localStorage.removeItem('glucoseRecords_v1');
@@ -135,7 +130,6 @@
       render();
     });
 
-    document.getElementById('exportCsv').addEventListener('click', exportCsv);
     document.getElementById('clearAll').addEventListener('click', clearAll);
 
     render();
