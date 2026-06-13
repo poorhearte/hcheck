@@ -12,12 +12,15 @@
 
 1. Vercel Dashboard → 프로젝트 선택
 2. "Storage" 탭 클릭
-3. "Create Database" → "Postgres" 선택
+3. 현재 Vercel은 직접 PostgreSQL 메뉴 대신 "Marketplace Database Providers"를 통해 DB를 생성합니다.
+   - 보통 `Neon` 또는 `Supabase`를 선택하면 PostgreSQL DB를 사용할 수 있습니다.
+   - Vercel DB 통합을 원하면 `Neon` 선택이 가장 가깝습니다.
 4. DB명: `glucose_db` (또는 원하는 이름)
 5. Region: 기본값 (또는 가장 가까운 지역)
 6. "Create" 클릭
 
-**자동 생성 항목**:
+**자동 생성 항목** (선택한 공급자에 따라):
+
 - `POSTGRES_PRISMA_URL` (연결 URL)
 - `POSTGRES_URL_NON_POOLING` (논-풀링 연결)
 
@@ -42,6 +45,7 @@ CREATE INDEX idx_glucose_timestamp ON glucose_records(timestamp DESC);
 ## 4단계: 환경변수 확인
 
 Vercel Dashboard → Settings → Environment Variables에서 확인:
+
 - `POSTGRES_URL_NON_POOLING` (클라이언트용 권장)
 
 로컬에서 테스트하려면 `.env.local` 파일 생성:
@@ -85,10 +89,12 @@ git push
 현재 이 프로젝트는 **순수 HTML/CSS/JS 웹앱**이므로, 두 가지 선택지가 있습니다:
 
 **A. 간단함 (권장)**: Vercel Serverless Functions 사용
+
 - `api/` 폴더에 Node.js 엔드포인트 작성
 - 프론트에서 API 호출
 
 **B. 풀스택**: Next.js로 마이그레이션
+
 - React + Next.js 구조로 전환
 - API 경로 자동 생성
 

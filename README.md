@@ -1,6 +1,7 @@
 간단한 혈당관리 앱 (Vercel DB 연동)
 
 설명
+
 - 혈당 수치를 입력받아 Vercel Postgres DB에 저장하는 웹 앱
 - Vercel Serverless Functions로 API 서버 제공
 - 오프라인 폴백: localStorage 사용 (인터넷 없을 때 로컬 저장)
@@ -18,6 +19,7 @@ npm run dev
 ```
 
 브라우저에서 `index.html` 파일을 열어 사용합니다:
+
 - 로컬: `file:///path/to/hcheck/index.html`
 - 또는 VSCode의 Live Server 확장으로 실행
 
@@ -55,6 +57,7 @@ vercel
 ### 3단계: 환경변수 설정
 
 Vercel Dashboard → Settings → Environment Variables:
+
 - `POSTGRES_URL_NON_POOLING` (자동으로 설정됨)
 
 ### 4단계: 배포 확인
@@ -100,11 +103,13 @@ hcheck/
 
 **데이터 저장 아키텍처**:
 ```
+
 클라이언트 (app.js)
-      ↓ fetch
+↓ fetch
 API (api/glucose.js)
-      ↓ SQL
+↓ SQL
 Vercel Postgres DB
+
 ```
 
 **추상화 계층**: API 엔드포인트(`api/glucose.js`)를 수정하면 코드 재사용성 높음
@@ -113,3 +118,4 @@ Vercel Postgres DB
 라이선스
 
 개인 학습/사용 목적
+```

@@ -24,8 +24,8 @@ export default async function handler(req, res) {
       const ts = timestamp ? new Date(timestamp) : new Date();
 
       const result = await sql`
-        INSERT INTO glucose_records (timestamp, value, note)
-        VALUES (${ts.toISOString()}, ${parseFloat(value)}, ${note || null})
+        INSERT INTO t_data (created_at, value, type, note)
+        VALUES (${ts.toISOString()}, ${parseFloat(value)}, 'glucose', ${note || null})
         RETURNING *;
       `;
 
@@ -35,8 +35,9 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       // 혈당 기록 조회
       const result = await sql`
-        SELECT * FROM glucose_records
-        ORDER BY timestamp DESC
+        SELECT ser as id, created_at as timestamp, value, note FROM t_data
+        WHERE type = 'glucose'
+        ORDER BY created_at DESC
         LIMIT 100;
       `;
 
@@ -51,7 +52,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'ID는 필수입니다' });
       }
 
-      await sql`DELETE FROM glucose_records WHERE id = ${id};`;
+      await sql`DELETE FROM t_data WHERE ser = ${id};`;
 
       return res.status(200).json({ success: true });
     }
