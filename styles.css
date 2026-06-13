@@ -58,11 +58,12 @@ input[type="text"] {
 }
 
 .actions button {
-  flex: 1 1 150px;
+  flex: 0 1 auto;
+  min-width: 110px;
 }
 
 button {
-  padding: 12px 16px;
+  padding: 10px 14px;
   border: 0;
   border-radius: 10px;
   background: #0b79ff;
@@ -162,7 +163,9 @@ section {
   }
 
   .actions button {
-    width: 100%;
+    width: auto;
+    flex: 0 1 auto;
+    align-self: stretch;
   }
 
   .record {
