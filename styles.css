@@ -105,6 +105,17 @@ section {
   border-bottom: 1px solid #eef3fb;
   border-radius: 10px;
   background: #fcfdff;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  transition: background-color 700ms ease, transform 120ms ease;
+}
+
+/* 길게 누르는 동안 삭제 예고 피드백 */
+.record.holding {
+  background: #fde2e2;
+  transform: scale(0.99);
 }
 
 .record .left {

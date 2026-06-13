@@ -78,23 +78,48 @@
 
     const latest = records[0];
     const avgValue = records.reduce((s,r)=>s+Number(r.value),0)/records.length;
-    const avg = formatGlucoseValue(avgValue);
-    statsEl.innerHTML = `<strong>평균:</strong> ${avg} mg/dL (최근 ${records.length}건)`;
+    const avg = Math.round(avgValue);
+    statsEl.innerHTML = `<strong>평균:</strong> ${avg} mg/dL (총 ${records.length}건)`;
 
     records.forEach(r=>{
       const li = document.createElement('li');
       li.className = 'record';
+      li.dataset.id = r.id;
       const dt = new Date(r.timestamp);
-      li.innerHTML = `<div class="left"><div class="val">${formatGlucoseValue(r.value)} mg/dL</div><div class="time">${dt.toLocaleString()}</div></div><div class="right"><div class="note">${r.note||''}</div><button data-id="${r.id}" class="del">삭제</button></div>`;
+      li.innerHTML = `<div class="left"><div class="val">${formatGlucoseValue(r.value)} mg/dL</div><div class="time">${dt.toLocaleString()}</div></div><div class="right"><div class="note">${r.note||''}</div></div>`;
+      attachLongPressDelete(li, r.id);
       listEl.appendChild(li);
     });
+  }
 
-    listEl.querySelectorAll('button.del').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const id = btn.getAttribute('data-id');
-        deleteRecord(id);
-      });
+  // 길게 누르면(롱프레스) 해당 기록을 삭제
+  function attachLongPressDelete(li, id){
+    const HOLD_MS = 700;
+    let timer = null;
+
+    const cancel = ()=>{
+      if(timer){ clearTimeout(timer); timer = null; }
+      li.classList.remove('holding');
+    };
+
+    const start = (ev)=>{
+      // 마우스는 좌클릭만
+      if(ev.type === 'mousedown' && ev.button !== 0) return;
+      li.classList.add('holding');
+      timer = setTimeout(()=>{
+        timer = null;
+        li.classList.remove('holding');
+        if(confirm('이 기록을 삭제하시겠습니까?')) deleteRecord(id);
+      }, HOLD_MS);
+    };
+
+    li.addEventListener('mousedown', start);
+    li.addEventListener('touchstart', start, { passive: true });
+    ['mouseup','mouseleave','touchend','touchcancel','touchmove'].forEach(evt=>{
+      li.addEventListener(evt, cancel);
     });
+    // 롱프레스 중 컨텍스트 메뉴/텍스트 선택 방지
+    li.addEventListener('contextmenu', e=> e.preventDefault());
   }
 
   async function clearAll(){
