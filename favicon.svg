@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <clipPath id="drop">
+      <path d="M50 8 C58 24 88 42 88 60 A38 38 0 1 1 12 60 C12 42 42 24 50 8 Z"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#drop)">
+    <rect width="100" height="100" fill="#e8423d"/>
+    <path d="M50 6 C57 30 55 64 67 100 L100 100 L100 0 Z" fill="#c01f1f"/>
+  </g>
+  <g fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M37 31 V85"/>
+    <path d="M37 60 C37 53 44 49 52 49 C61 49 66 55 66 63 V85"/>
+  </g>
+</svg>

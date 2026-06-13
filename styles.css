@@ -86,6 +86,108 @@ section {
   margin-top: 24px;
 }
 
+/* 혈당 수치 기준표 (glucose-guide.js 가 렌더링) */
+.guide-details {
+  border: 1px solid #e5ebf3;
+  border-radius: 10px;
+  background: #fcfdff;
+  padding: 0 14px;
+}
+
+.guide-details summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.guide-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.guide-details summary::before {
+  content: "▸";
+  color: #0b79ff;
+  transition: transform 160ms ease;
+}
+
+.guide-details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.guide-details[open] summary {
+  border-bottom: 1px solid #eef3fb;
+  margin-bottom: 12px;
+}
+
+.guide-details > *:last-child {
+  padding-bottom: 14px;
+}
+
+.guide-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table.glucose-guide {
+  width: 100%;
+  min-width: 460px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+table.glucose-guide th,
+table.glucose-guide td {
+  border: 1px solid #e5ebf3;
+  padding: 10px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+table.glucose-guide thead th {
+  background: #f0f4fa;
+  color: #333;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+table.glucose-guide tbody th {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+table.glucose-guide .sub {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: #777;
+}
+
+table.glucose-guide tr.lv-high th[scope="row"]   { background: #fde2e2; color: #b3261e; }
+table.glucose-guide tr.lv-mid th[scope="row"]    { background: #fef0d9; color: #b5700a; }
+table.glucose-guide tr.lv-normal th[scope="row"] { background: #e3f4e6; color: #1f7a3d; }
+
+.guide-unit {
+  font-size: 12px;
+  color: #777;
+  margin: 8px 0 0;
+}
+
+table.glucose-guide .hi-num {
+  color: #d32020;
+  font-weight: 800;
+}
+
+table.glucose-guide .mid-num {
+  color: #ef7d1a;
+  font-weight: 800;
+}
+
 #stats {
   margin-bottom: 12px;
 }

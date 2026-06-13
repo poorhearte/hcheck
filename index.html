@@ -4,7 +4,37 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>혈당관리 - 간단</title>
+  <link rel="icon" id="favicon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="styles.css">
+  <script>
+    // 접속 환경에 따라 탭 제목/아이콘 분기 (localhost = 개발, 그 외 = 운영)
+    (function(){
+      var host = location.hostname;
+      var isDev = host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
+      var cfg = isDev
+        ? { title: '[DEV]hCheck919', light: '#f59e0b', dark: '#b5700a' }   // 개발(localhost) - 앰버
+        : { title: 'hCheck919',       light: '#e8423d', dark: '#c01f1f' };  // 운영(production) - 혈액 빨강
+
+      document.title = cfg.title;
+
+      // 채혈(혈당 측정)을 상징하는 핏방울 + 'h' 글자 파비콘 (좌우 명암 입체감)
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
+        + '<defs><clipPath id="drop">'
+        + '<path d="M50 8 C58 24 88 42 88 60 A38 38 0 1 1 12 60 C12 42 42 24 50 8 Z"/>'
+        + '</clipPath></defs>'
+        + '<g clip-path="url(#drop)">'
+        + '<rect width="100" height="100" fill="' + cfg.light + '"/>'
+        + '<path d="M50 6 C57 30 55 64 67 100 L100 100 L100 0 Z" fill="' + cfg.dark + '"/>'
+        + '</g>'
+        + '<g fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">'
+        + '<path d="M37 31 V85"/>'
+        + '<path d="M37 60 C37 53 44 49 52 49 C61 49 66 55 66 63 V85"/>'
+        + '</g>'
+        + '</svg>';
+      document.getElementById('favicon').href =
+        'data:image/svg+xml,' + encodeURIComponent(svg);
+    })();
+  </script>
 </head>
 <body>
   <div class="container">
@@ -30,12 +60,15 @@
     </form>
 
     <section>
-      <h2>기록 목록</h2>
+      <h2>기록</h2>
       <div id="stats"></div>
       <ul id="recordList"></ul>
     </section>
+
+    <section id="glucoseGuide"></section>
   </div>
 
+  <script src="glucose-guide.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
