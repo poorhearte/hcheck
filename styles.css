@@ -7,16 +7,44 @@ body {
   background: #f6f7fb;
   color: #222;
   margin: 0;
-  padding: 16px;
+  padding: 12px;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden; /* 페이지 전체 스크롤 막기 — 각 패널 고정 */
 }
 
+/* 3개 패널을 세로로 쌓고 화면 높이에 고정 */
 .container {
   width: min(100%, 720px);
+  height: 100%;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+/* 공통 패널(카드) 스타일 */
+.panel {
   background: #fff;
-  padding: 20px;
+  padding: 16px 20px;
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(13, 31, 41, 0.08);
+  margin: 0;
+}
+
+/* ① 저장 입력 / ③ 혈당 기준: 내용 높이만큼 고정 */
+.panel-input,
+.panel-guide {
+  flex: 0 0 auto;
+}
+
+/* ② 기록: 남는 공간을 모두 차지하고 내부에서만 스크롤 */
+.panel-records {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 h1 {
@@ -87,19 +115,12 @@ section {
 }
 
 /* 혈당 수치 기준표 (glucose-guide.js 가 렌더링) */
-.guide-details {
-  border: 1px solid #e5ebf3;
-  border-radius: 10px;
-  background: #fcfdff;
-  padding: 0 14px;
-}
-
 .guide-details summary {
   cursor: pointer;
   list-style: none;
   font-size: 1.1rem;
   font-weight: 700;
-  padding: 14px 0;
+  padding: 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -121,12 +142,9 @@ section {
 }
 
 .guide-details[open] summary {
+  padding-bottom: 12px;
   border-bottom: 1px solid #eef3fb;
   margin-bottom: 12px;
-}
-
-.guide-details > *:last-child {
-  padding-bottom: 14px;
 }
 
 .guide-scroll {
@@ -255,11 +273,11 @@ table.glucose-guide .mid-num {
 
 @media (max-width: 640px) {
   body {
-    padding: 12px;
+    padding: 10px;
   }
 
-  .container {
-    padding: 16px;
+  .panel {
+    padding: 14px 16px;
   }
 
   form {

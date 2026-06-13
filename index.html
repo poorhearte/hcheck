@@ -38,9 +38,9 @@
 </head>
 <body>
   <div class="container">
-    <h1>혈당 기록</h1>
+    <!-- <h1>혈당 기록</h1> -->
 
-    <form id="recordForm">
+    <form id="recordForm" class="panel panel-input">
       <label>혈당 (mg/dL)
         <input type="number" id="glucose" name="glucose" min="0" step="0.1" required>
       </label>
@@ -59,13 +59,13 @@
       </div>
     </form>
 
-    <section>
-      <h2>기록</h2>
+    <section class="panel panel-records">
+      <!-- <h2>기록</h2> -->
       <div id="stats"></div>
       <ul id="recordList"></ul>
     </section>
 
-    <section id="glucoseGuide"></section>
+    <section id="glucoseGuide" class="panel panel-guide"></section>
   </div>
 
   <script src="glucose-guide.js"></script>

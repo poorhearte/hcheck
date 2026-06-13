@@ -135,17 +135,23 @@
     const datetime = document.getElementById('datetime');
     datetime.value = nowLocalDatetimeInputValue();
 
+    // 사용자가 일시를 직접 수정했는지 추적. 수정 안 했으면 저장 시점의 '현재 시각'을 사용
+    let datetimeDirty = false;
+    datetime.addEventListener('input', ()=> { datetimeDirty = true; });
+
     form.addEventListener('submit', async (ev)=>{
       ev.preventDefault();
       const value = document.getElementById('glucose').value;
       const dt = document.getElementById('datetime').value;
       const note = document.getElementById('note').value;
       if(!value){ alert('혈당을 입력하세요'); return; }
-      const timestamp = dt ? new Date(dt) : new Date();
+      // 일시를 직접 바꿨으면 그 값을, 아니면 지금 시각을 기록
+      const timestamp = (datetimeDirty && dt) ? new Date(dt) : new Date();
       await saveRecords(value, timestamp, note);
       document.getElementById('glucose').value = '';
       document.getElementById('note').value = '';
       datetime.value = nowLocalDatetimeInputValue();
+      datetimeDirty = false;
       render();
     });
 
