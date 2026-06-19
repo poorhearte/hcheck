@@ -1,6 +1,7 @@
 -- 001_create_glucose_records.sql
 -- Run this in Neon Query editor or via psql using your unpooled host
 
+-- DROP TABLE public.t_data;
 CREATE TABLE IF NOT EXISTS t_data(
   ser SERIAL PRIMARY KEY,
   created_at 			TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP, -- CURRENT_TIMESTAMP=now(), CURRENT_TIMESTAMP가 SQL표준이라서 사용하겠음

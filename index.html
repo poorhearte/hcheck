@@ -38,37 +38,77 @@
 </head>
 <body>
   <div class="container">
-    <!-- <h1>혈당 기록</h1> -->
+    <nav class="tabs">
+      <button type="button" class="tab active" data-view="glucose">혈당</button>
+      <button type="button" class="tab" data-view="hospital">병원 진료</button>
+    </nav>
 
-    <form id="recordForm" class="panel panel-input">
-      <label>혈당 (mg/dL)
-        <input type="number" id="glucose" name="glucose" min="0" step="0.1" required>
-      </label>
+    <!-- ===== 혈당 ===== -->
+    <div class="view view-glucose">
+      <form id="recordForm" class="panel panel-input">
+        <label>혈당 (mg/dL)
+          <input type="number" id="glucose" name="glucose" min="0" step="0.1" required>
+        </label>
 
-      <label>일시 (변경 가능)
-        <input type="datetime-local" id="datetime" name="datetime" step="1">
-      </label>
+        <label>일시 (변경 가능)
+          <input type="datetime-local" id="datetime" name="datetime" step="1">
+        </label>
 
-      <label>메모
-        <input type="text" id="note" name="note" placeholder="선택 입력">
-      </label>
+        <label>메모
+          <input type="text" id="note" name="note" placeholder="선택 입력">
+        </label>
 
-      <div class="actions">
-        <button type="submit">저장</button>
-        <!-- <button type="button" id="clearAll">모두 삭제</button> -->
-      </div>
-    </form>
+        <div class="actions">
+          <button type="submit">저장</button>
+          <!-- <button type="button" id="clearAll">모두 삭제</button> -->
+        </div>
+      </form>
 
-    <section class="panel panel-records">
-      <!-- <h2>기록</h2> -->
-      <div id="stats"></div>
-      <ul id="recordList"></ul>
-    </section>
+      <section class="panel panel-records">
+        <!-- <h2>기록</h2> -->
+        <div id="stats"></div>
+        <ul id="recordList"></ul>
+      </section>
 
-    <section id="glucoseGuide" class="panel panel-guide"></section>
+      <section id="glucoseGuide" class="panel panel-guide"></section>
+    </div>
+
+    <!-- ===== 병원 진료 ===== -->
+    <div class="view view-hospital" hidden>
+      <form id="visitForm" class="panel panel-input">
+        <label>병원명
+          <input type="text" id="visitHospital" placeholder="예: OO내과">
+        </label>
+
+        <label>예약시간
+          <input type="datetime-local" id="visitReserved">
+        </label>
+
+        <label>소요시간
+          <span class="dur-row">
+            <input type="number" id="visitHours" min="0" placeholder="시간"><span>시간</span>
+            <input type="number" id="visitMinutes" min="0" max="59" placeholder="분"><span>분</span>
+          </span>
+        </label>
+
+        <label>메모
+          <input type="text" id="visitMemo" placeholder="선택 입력">
+        </label>
+
+        <div class="actions">
+          <button type="submit">저장</button>
+        </div>
+      </form>
+
+      <section class="panel panel-records">
+        <ul id="visitList"></ul>
+      </section>
+    </div>
   </div>
 
   <script src="glucose-guide.js"></script>
+  <script src="nav.js"></script>
+  <script src="hospital.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
