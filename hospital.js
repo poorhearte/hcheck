@@ -143,6 +143,8 @@
       render();
     });
 
-    render();
+    // 병원 진료 탭을 열 때 로드 — 시작 시 미리 불러오지 않아 첫 화면(혈당) 로딩이 빨라짐
+    const hospitalTab = document.querySelector('.tab[data-view="hospital"]');
+    if(hospitalTab) hospitalTab.addEventListener('click', render);
   });
 })();

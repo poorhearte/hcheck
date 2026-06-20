@@ -223,10 +223,9 @@
     if(prev) prev.addEventListener('click', ()=>{ shift(-1); renderView(); });
     if(next) next.addEventListener('click', ()=>{ if(next.disabled) return; shift(1); renderView(); });
 
-    // 통계 탭으로 전환될 때마다 최신 데이터로 갱신
+    // 통계 탭을 열 때(그리고 열 때마다) 최신 데이터로 갱신.
+    // 시작 시 미리 불러오지 않아 첫 화면(혈당 탭) 로딩이 빨라짐 — 탭을 처음 열 때 로드됨
     const statsTab = document.querySelector('.tab[data-view="stats"]');
     if(statsTab) statsTab.addEventListener('click', refresh);
-
-    refresh();
   });
 })();

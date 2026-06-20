@@ -1,5 +1,15 @@
 (function(){
   const API_PATH = '/api/glucose';
+  const CACHE_KEY = 'hcheck_glucose_v1';
+
+  // 마지막으로 성공한 응답을 로컬에 저장 → 다음 진입 시 즉시 그림(체감 속도)
+  function readCache(){
+    try{ const s = localStorage.getItem(CACHE_KEY); return s ? JSON.parse(s) : null; }
+    catch(_){ return null; }
+  }
+  function writeCache(records){
+    try{ localStorage.setItem(CACHE_KEY, JSON.stringify(records)); }catch(_){ /* 용량 초과 등 무시 */ }
+  }
 
   function nowLocalDatetimeInputValue() {
     const d = new Date();
@@ -210,27 +220,24 @@
     render();
   }
 
-  async function render(){
+  // 주어진 데이터로 화면을 그림 (네트워크 대기 없음)
+  function draw(records){
     const listEl = document.getElementById('recordList');
     const statsEl = document.getElementById('stats');
-    const records = (await loadRecords()).slice().sort((a,b)=> new Date(b.timestamp) - new Date(a.timestamp));
+    if(!listEl) return;
+    const recordsDesc = records.slice().sort((a,b)=> new Date(b.timestamp) - new Date(a.timestamp));
     listEl.innerHTML = '';
 
-    if(records.length===0){
+    if(recordsDesc.length===0){
       renderLatestChart([]);
       listEl.innerHTML = '<li class="empty">기록이 없습니다.</li>';
-      statsEl.textContent = lastFetchError ? '서버에서 데이터를 가져올 수 없습니다. 콘솔을 확인하세요.' : '';
+      if(statsEl) statsEl.textContent = lastFetchError ? '서버에서 데이터를 가져올 수 없습니다. 콘솔을 확인하세요.' : '';
       return;
     }
 
-    renderLatestChart(records);
+    renderLatestChart(recordsDesc);
 
-    const latest = records[0];
-    const avgValue = records.reduce((s,r)=>s+Number(r.value),0)/records.length;
-    const avg = Math.round(avgValue);
-    // statsEl.innerHTML = `<strong>평균:</strong> ${avg} mg/dL (총 ${records.length}건)`;
-
-    records.forEach(r=>{
+    recordsDesc.forEach(r=>{
       const li = document.createElement('li');
       li.className = 'record';
       li.dataset.id = r.id;
@@ -239,6 +246,18 @@
       attachLongPress(li, r);
       listEl.appendChild(li);
     });
+  }
+
+  // 서버에서 최신 데이터를 받아 그림. 실패 시 캐시 유지
+  async function render(){
+    const fresh = await loadRecords();
+    if(lastFetchError){
+      const cached = readCache();
+      draw(cached && cached.length ? cached : []);
+      return;
+    }
+    writeCache(fresh);
+    draw(fresh);
   }
 
   // 길게 누르면(롱프레스) 수정/삭제 팝업 열기
@@ -357,6 +376,9 @@
     const modal = document.getElementById('editModal');
     modal.addEventListener('click', (e)=>{ if(e.target === modal) closeEditModal(); });
 
+    // 캐시가 있으면 즉시 그려서 체감 로딩을 0에 가깝게, 그 뒤 최신 데이터로 갱신
+    const cached = readCache();
+    if(cached && cached.length) draw(cached);
     render();
   });
 
