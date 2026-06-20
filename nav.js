@@ -4,6 +4,7 @@
     const tabs = document.querySelectorAll('.tab');
     const views = {
       glucose:  document.querySelector('.view-glucose'),
+      stats:    document.querySelector('.view-stats'),
       hospital: document.querySelector('.view-hospital')
     };
 

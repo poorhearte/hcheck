@@ -329,6 +329,141 @@ table.glucose-guide .mid-num {
   color: #666;
 }
 
+/* ===== 통계 화면 ===== */
+.stats-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 월/주 모드 토글 */
+.mode-toggle {
+  display: flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.mode-btn {
+  min-width: 52px;
+  background: #fff;
+  color: #0b79ff;
+  border: 1px solid #d9e0ea;
+  font-weight: 700;
+}
+
+.mode-btn:hover,
+.mode-btn:focus-visible {
+  transform: none;
+  background: #f0f6ff;
+}
+
+.mode-btn.active {
+  background: #0b79ff;
+  color: #fff;
+  border-color: #0b79ff;
+}
+
+/* 기간 이동 (◀ 라벨 ▶) */
+.period-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+
+.period-label {
+  font-weight: 700;
+  color: #0b3a66;
+  min-width: 96px;
+  text-align: center;
+}
+
+.nav-btn {
+  width: 38px;
+  padding: 6px 0;
+  font-size: 1.2rem;
+  line-height: 1;
+  background: #fff;
+  color: #0b79ff;
+  border: 1px solid #d9e0ea;
+  font-weight: 700;
+}
+
+.nav-btn:hover:not(:disabled),
+.nav-btn:focus-visible {
+  transform: none;
+  background: #f0f6ff;
+}
+
+.nav-btn:disabled {
+  color: #c2cad6;
+  cursor: not-allowed;
+  background: #f7f9fc;
+}
+
+/* 요약 카드 */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: #f7faff;
+  border: 1px solid #eef3fb;
+  border-radius: 10px;
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #777;
+}
+
+.stat-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0b3a66;
+  line-height: 1.2;
+}
+
+.stat-sub {
+  font-size: 11px;
+  color: #999;
+}
+
+/* 차트 */
+.chart-wrap {
+  width: 100%;
+}
+
+.glucose-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.glucose-chart .ax {
+  font-size: 11px;
+  fill: #94a3b8;
+}
+
+.glucose-chart .ax.val {
+  font-size: 11px;
+  fill: #475569;
+  font-weight: 700;
+}
+
+.glucose-chart .ax.avg {
+  fill: #64748b;
+  font-weight: 700;
+}
+
 @media (max-width: 640px) {
   body {
     padding: 10px;
