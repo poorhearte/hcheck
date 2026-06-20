@@ -134,9 +134,11 @@
     if(recordsDesc.length === 0){
       panel.hidden = true;
       el.innerHTML = '';
+      el.classList.remove('has-hint');
       return;
     }
     el.innerHTML = buildLatestChart(recordsDesc);
+    renderHighHint(recordsDesc, el);
 
     // 캡션: 최근 5건 평균(반올림)
     const caption = document.getElementById('chartCaption');
@@ -144,11 +146,53 @@
       const vals = recordsDesc.slice(0, 5).map(r => Number(r.value)).filter(v => !Number.isNaN(v));
       if(vals.length){
         const avg = Math.round(vals.reduce((s,v)=>s+v,0) / vals.length);
-        caption.textContent = `평균: ${avg} mg/dL (최근 5건)`;
+        const goalMet = avg <= 130;
+        const status = goalMet
+          ? '😊130이하 달성,잘하고 있어요'
+          : '💪130이하로 낮춰야 해요';
+        caption.innerHTML = `평균: ${avg}`
+          + ` <span class="goal-status ${goalMet ? 'ok' : 'warn'}">${status}</span>`;
       }
     }
 
     panel.hidden = false;
+  }
+
+  // 최근 5건 중 최고값이 130 초과면, 그 지점을 가리키는 말풍선(클릭 시 그 날 기록 수정) 표시
+  function renderHighHint(recordsDesc, el){
+    el.classList.remove('has-hint');
+    const old = el.querySelector('.chart-hint');
+    if(old) old.remove();
+
+    // 차트와 동일한 순서(오래된→최신)
+    const data5 = recordsDesc.slice(0, 5)
+      .map(r => ({ rec: r, value: Number(r.value) }))
+      .filter(d => !Number.isNaN(d.value))
+      .reverse();
+    if(data5.length === 0) return;
+
+    // 최고값(동률이면 가장 최근 기록)
+    let maxIdx = 0;
+    for(let i = 1; i < data5.length; i++){
+      if(data5[i].value >= data5[maxIdx].value) maxIdx = i;
+    }
+    if(data5[maxIdx].value <= 130) return;
+
+    // 차트 X 좌표(buildLatestChart와 동일한 W/pad)로 말풍선 포인터 위치 계산
+    const n = data5.length;
+    const W = 640, padL = 20, padR = 20, innerW = W - padL - padR;
+    const x = n === 1 ? padL + innerW/2 : padL + innerW * (maxIdx/(n-1));
+    let pointerPct = (x / W) * 100;
+    pointerPct = Math.min(92, Math.max(8, pointerPct));
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chart-hint';
+    btn.style.setProperty('--pointer', pointerPct + '%');
+    btn.textContent = '이때 식사/운동의 문제를 기록해보세요';
+    btn.addEventListener('click', () => openEditModal(data5[maxIdx].rec));
+    el.appendChild(btn);
+    el.classList.add('has-hint');
   }
 
   async function deleteRecord(id){
