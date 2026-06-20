@@ -447,6 +447,12 @@ table.glucose-guide .mid-num {
   font-weight: 800;
 }
 
+/* 펼칠 때 시트가 아래에서 위로 올라오는 효과 */
+@keyframes guideRise {
+  from { transform: translateX(-50%) translateY(16px); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+}
+
 #stats {
   margin-bottom: 12px;
 }
@@ -790,6 +796,31 @@ table.glucose-guide .mid-num {
   .record .right {
     align-items: flex-start;
     width: 100%;
+  }
+  /* 혈당 수치 기준을 펼치면, 제자리 카드가 아니라 바닥에서 위로 올라오는
+     시트로 바뀌어 표 전체가 한 화면에 보이도록. 접으면 원래 작은 카드로 복귀. */
+  #glucoseGuide:has(.guide-details[open]) {
+    position: fixed;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    width: calc(100% - 20px);
+    max-width: 720px;
+    max-height: calc(100dvh - 20px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 60;
+    box-shadow: 0 -10px 30px rgba(13, 31, 41, 0.22);
+    animation: guideRise 0.18s ease-out;
+  }
+
+  /* 시트 뒤 배경을 살짝 어둡게 — 펼친 카드가 도드라지도록 */
+  #glucoseGuide:has(.guide-details[open])::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 31, 41, 0.3);
+    z-index: -1;
   }
 
   /* 혈당 기준표: 좁은 화면에서 가로 잘림 방지 — 열 너비를 화면에 맞추고 줄바꿈 */
