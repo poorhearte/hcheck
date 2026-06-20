@@ -77,6 +77,36 @@ body {
   display: block;
 }
 
+/* 탭 바의 '앱으로 설치' 버튼 */
+.tab-install {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  background: #fff;
+  color: #0b79ff;
+  border: 1px solid #d9e0ea;
+  border-radius: 10px;
+}
+
+.tab-install[hidden] {
+  display: none;
+}
+
+.tab-install:hover,
+.tab-install:focus-visible {
+  transform: none;
+  background: #f0f6ff;
+}
+
+.tab-install svg {
+  display: block;
+}
+
 /* 탭에 연결된 화면(뷰): 활성 뷰가 남는 높이를 채우는 세로 컬럼 */
 .view {
   display: flex;
