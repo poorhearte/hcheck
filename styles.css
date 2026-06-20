@@ -729,4 +729,27 @@ table.glucose-guide .mid-num {
     align-items: flex-start;
     width: 100%;
   }
+
+  /* 혈당 기준표: 좁은 화면에서 가로 잘림 방지 — 열 너비를 화면에 맞추고 줄바꿈 */
+  table.glucose-guide {
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
+    font-size: 12px;
+  }
+
+  table.glucose-guide th,
+  table.glucose-guide td {
+    padding: 7px 3px;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  table.glucose-guide tbody th {
+    white-space: normal;
+  }
+
+  table.glucose-guide .sub {
+    font-size: 10px;
+  }
 }

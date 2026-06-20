@@ -114,12 +114,13 @@
     let dots = '';
     data.forEach((d,i)=>{
       const x = xFor(i), y = yFor(d.value);
+      // 양 끝 라벨이 그래프 밖으로 잘리지 않도록 첫/마지막은 start/end 정렬
+      let anchor = 'middle';
+      if(n > 1 && i === 0) anchor = 'start';
+      else if(n > 1 && i === n-1) anchor = 'end';
       dots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.5" fill="${levelColor(d.value)}" stroke="#fff" stroke-width="2"/>`;
-      dots += `<text x="${x.toFixed(1)}" y="${(y-14).toFixed(1)}" text-anchor="middle" class="ax val">${formatGlucoseValue(d.value)}</text>`;
-      let dAnchor = 'middle';
-      if(n > 1 && i === 0) dAnchor = 'start';
-      else if(n > 1 && i === n-1) dAnchor = 'end';
-      dots += `<text x="${x.toFixed(1)}" y="${H-12}" text-anchor="${dAnchor}" class="ax">${d.t.getMonth()+1}/${d.t.getDate()}${WEEKDAYS[d.t.getDay()]}</text>`;
+      dots += `<text x="${x.toFixed(1)}" y="${(y-14).toFixed(1)}" text-anchor="${anchor}" class="ax val">${formatGlucoseValue(d.value)}</text>`;
+      dots += `<text x="${x.toFixed(1)}" y="${H-12}" text-anchor="${anchor}" class="ax">${d.t.getMonth()+1}/${d.t.getDate()}${WEEKDAYS[d.t.getDay()]}</text>`;
     });
 
     return `<svg viewBox="0 0 ${W} ${H}" class="glucose-chart mini" role="img" aria-label="최근 5건 혈당 그래프">`
