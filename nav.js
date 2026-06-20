@@ -17,5 +17,9 @@
         });
       });
     });
+
+    // 새로고침 버튼 — 브라우저 전체 새로고침
+    const refreshBtn = document.getElementById('visitRefresh');
+    if(refreshBtn) refreshBtn.addEventListener('click', ()=> location.reload());
   });
 })();

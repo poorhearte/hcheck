@@ -93,8 +93,8 @@
   }
 
   function buildChart(data){
-    const W = 640, H = 320;
-    const pad = { top: 24, right: 16, bottom: 36, left: 44 };
+    const W = 640, H = 460;
+    const pad = { top: 28, right: 20, bottom: 44, left: 56 };
     const innerW = W - pad.left - pad.right;
     const innerH = H - pad.top - pad.bottom;
     const n = data.length;
@@ -126,10 +126,10 @@
       + `<text x="${W-pad.right}" y="${(avgY-6).toFixed(1)}" text-anchor="end" class="ax avg">평균 ${Math.round(avg)}</text>`;
 
     const linePts = data.map((d,i)=> `${xFor(i).toFixed(1)},${yFor(d.value).toFixed(1)}`).join(' ');
-    const polyline = n > 1 ? `<polyline points="${linePts}" fill="none" stroke="#0b79ff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>` : '';
+    const polyline = n > 1 ? `<polyline points="${linePts}" fill="none" stroke="#0b79ff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>` : '';
 
     let xlabels = '';
-    const step = Math.max(1, Math.ceil(n/6));
+    const step = Math.max(1, Math.ceil(n/4));
     data.forEach((d,i)=>{
       if(i % step === 0 || i === n-1){
         xlabels += `<text x="${xFor(i).toFixed(1)}" y="${H-12}" text-anchor="middle" class="ax">${fmtDateDow(d.t)}</text>`;
@@ -140,9 +140,9 @@
     const showValues = n <= 12;
     data.forEach((d,i)=>{
       const x = xFor(i), y = yFor(d.value);
-      dots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" fill="${levelColor(d.value)}" stroke="#fff" stroke-width="1.5"/>`;
+      dots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.5" fill="${levelColor(d.value)}" stroke="#fff" stroke-width="2"/>`;
       if(showValues){
-        dots += `<text x="${x.toFixed(1)}" y="${(y-10).toFixed(1)}" text-anchor="middle" class="ax val">${fmtNum(d.value)}</text>`;
+        dots += `<text x="${x.toFixed(1)}" y="${(y-14).toFixed(1)}" text-anchor="middle" class="ax val">${fmtNum(d.value)}</text>`;
       }
     });
 

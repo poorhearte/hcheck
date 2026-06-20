@@ -53,6 +53,30 @@ body {
   border-color: #0b79ff;
 }
 
+/* 탭 바 끝의 새로고침 아이콘 버튼 (탭처럼 늘어나지 않고 고정폭) */
+.tab-refresh {
+  flex: 0 0 auto;
+  width: 46px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #0b79ff;
+  border: 1px solid #d9e0ea;
+  border-radius: 10px;
+}
+
+.tab-refresh:hover,
+.tab-refresh:focus-visible {
+  transform: none;
+  background: #f0f6ff;
+}
+
+.tab-refresh svg {
+  display: block;
+}
+
 /* 탭에 연결된 화면(뷰): 활성 뷰가 남는 높이를 채우는 세로 컬럼 */
 .view {
   display: flex;
@@ -146,6 +170,22 @@ input[type="text"] {
 .actions button {
   flex: 0 1 auto;
   min-width: 110px;
+}
+
+/* 아이콘 버튼 (저장 등) — 입력칸 높이에 맞춘 정사각형 */
+.actions .icon-btn {
+  flex: 0 0 auto;
+  min-width: 0;
+  width: 48px;
+  height: 46px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn svg {
+  display: block;
 }
 
 button {
@@ -458,18 +498,20 @@ table.glucose-guide .mid-num {
 }
 
 .glucose-chart .ax {
-  font-size: 11px;
-  fill: #94a3b8;
+  font-size: 23px;
+  fill: #334155;
+  font-weight: 600;
 }
 
 .glucose-chart .ax.val {
-  font-size: 11px;
-  fill: #475569;
-  font-weight: 700;
+  font-size: 25px;
+  fill: #0b3a66;
+  font-weight: 800;
 }
 
 .glucose-chart .ax.avg {
-  fill: #64748b;
+  font-size: 22px;
+  fill: #475569;
   font-weight: 700;
 }
 
@@ -562,6 +604,30 @@ table.glucose-guide .mid-num {
     width: auto;
     flex: 0 1 auto;
     align-self: stretch;
+  }
+
+  /* 혈당 폼: 좁은 화면에서도 일시 입력 + 저장 버튼은 한 줄 유지 */
+  .view-glucose .actions {
+    flex-direction: row;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+  }
+
+  .view-glucose .actions label {
+    flex: 1 1 auto;
+  }
+
+  .view-glucose .actions button {
+    flex: 0 0 auto;
+    align-self: auto;
+    width: auto;
+    min-width: 84px;
+  }
+
+  .view-glucose .actions .icon-btn {
+    width: 48px;
+    height: 46px;
+    min-width: 0;
   }
 
   .record {
