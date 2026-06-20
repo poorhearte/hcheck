@@ -43,6 +43,23 @@
     return await response.json();
   }
 
+  async function updateRecord(id, value, timestamp, note){
+    const response = await fetch(API_PATH, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, value, timestamp, note })
+    });
+    if(!response.ok) throw new Error('수정 실패');
+    return await response.json();
+  }
+
+  // Date → datetime-local 입력값 (YYYY-MM-DDTHH:mm:ss)
+  function toLocalInputValue(date){
+    const d = new Date(date);
+    const pad = n => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
   function formatGlucoseValue(value){
     const num = Number(value);
     if (Number.isNaN(num)) return value;
@@ -87,13 +104,13 @@
       li.dataset.id = r.id;
       const dt = new Date(r.timestamp);
       li.innerHTML = `<div class="left"><div class="val">${formatGlucoseValue(r.value)} mg/dL</div><div class="time">${dt.toLocaleString()}</div></div><div class="right"><div class="note">${r.note||''}</div></div>`;
-      attachLongPressDelete(li, r.id);
+      attachLongPress(li, r);
       listEl.appendChild(li);
     });
   }
 
-  // 길게 누르면(롱프레스) 해당 기록을 삭제
-  function attachLongPressDelete(li, id){
+  // 길게 누르면(롱프레스) 수정/삭제 팝업 열기
+  function attachLongPress(li, record){
     const HOLD_MS = 700;
     let timer = null;
 
@@ -109,7 +126,7 @@
       timer = setTimeout(()=>{
         timer = null;
         li.classList.remove('holding');
-        if(confirm('이 기록을 삭제하시겠습니까?')) deleteRecord(id);
+        openEditModal(record);
       }, HOLD_MS);
     };
 
@@ -120,6 +137,48 @@
     });
     // 롱프레스 중 컨텍스트 메뉴/텍스트 선택 방지
     li.addEventListener('contextmenu', e=> e.preventDefault());
+  }
+
+  // ===== 수정/삭제 팝업 =====
+  let editingId = null;
+
+  function openEditModal(record){
+    editingId = record.id;
+    document.getElementById('editGlucose').value = formatGlucoseValue(record.value);
+    document.getElementById('editDatetime').value = toLocalInputValue(record.timestamp);
+    document.getElementById('editNote').value = record.note || '';
+    document.getElementById('editModal').hidden = false;
+  }
+
+  function closeEditModal(){
+    editingId = null;
+    document.getElementById('editModal').hidden = true;
+  }
+
+  async function submitEdit(){
+    if(editingId == null) return;
+    const value = document.getElementById('editGlucose').value;
+    if(!value){ alert('혈당을 입력하세요'); return; }
+    const dt = document.getElementById('editDatetime').value;
+    const note = document.getElementById('editNote').value;
+    const timestamp = dt ? new Date(dt) : new Date();
+    try{
+      await updateRecord(editingId, value, timestamp, note);
+    }catch(e){
+      console.error('updateRecord', e);
+      alert('기록 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
+      return;
+    }
+    closeEditModal();
+    render();
+  }
+
+  async function deleteFromModal(){
+    const id = editingId;
+    if(id == null) return;
+    if(!confirm('이 기록을 삭제하시겠습니까?')) return;
+    closeEditModal();
+    await deleteRecord(id);
   }
 
   async function clearAll(){
@@ -157,6 +216,14 @@
 
     const clearAllBtn = document.getElementById('clearAll');
     if(clearAllBtn) clearAllBtn.addEventListener('click', clearAll);
+
+    // 수정/삭제 팝업 버튼
+    document.getElementById('editSave').addEventListener('click', submitEdit);
+    document.getElementById('editDelete').addEventListener('click', deleteFromModal);
+    document.getElementById('editCancel').addEventListener('click', closeEditModal);
+    // 바깥 영역 클릭 시 닫기
+    const modal = document.getElementById('editModal');
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) closeEditModal(); });
 
     render();
   });

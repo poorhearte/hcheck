@@ -162,7 +162,7 @@
       + card('평균', `${avg}`, 'mg/dL')
       + card('최저', `${fmtNum(min)}`, 'mg/dL')
       + card('최고', `${fmtNum(max)}`, 'mg/dL')
-      + card('최근', `${fmtNum(latest.value)}`, fmtDate(latest.t))
+      // + card('최근', `${fmtNum(latest.value)}`, fmtDate(latest.t))
       + card('기록 수', `${data.length}`, '건')
       + `</div>`;
   }

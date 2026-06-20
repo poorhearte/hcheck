@@ -44,6 +44,36 @@ export default async function handler(req, res) {
       return res.status(200).json(result.rows);
     }
 
+    if (req.method === 'PUT' || req.method === 'PATCH') {
+      // 혈당 기록 수정
+      const { id, value, timestamp, note } = req.body;
+
+      if (!id) {
+        return res.status(400).json({ error: 'ID는 필수입니다' });
+      }
+      if (value === undefined || value === null || value === '') {
+        return res.status(400).json({ error: '혈당 수치는 필수입니다' });
+      }
+
+      const ts = timestamp ? new Date(timestamp).toISOString() : null;
+
+      const result = await sql`
+        UPDATE t_data
+        SET value = ${parseFloat(value)},
+            note = ${note || null},
+            created_at = COALESCE(${ts}, created_at),
+            updated_at = CURRENT_TIMESTAMP
+        WHERE ser = ${id} AND type = 'glucose'
+        RETURNING ser as id, created_at as timestamp, value, note;
+      `;
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: '기록을 찾을 수 없습니다' });
+      }
+
+      return res.status(200).json(result.rows[0]);
+    }
+
     if (req.method === 'DELETE') {
       // 기록 삭제
       const { id } = req.body;

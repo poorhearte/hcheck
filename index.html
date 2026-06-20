@@ -124,6 +124,27 @@
         <ul id="visitList"></ul>
       </section>
     </div>
+
+    <!-- ===== 혈당 기록 수정 팝업 ===== -->
+    <div id="editModal" class="modal-overlay" hidden>
+      <div class="modal panel">
+        <h3 class="modal-title">기록 수정</h3>
+        <label>혈당 (mg/dL)
+          <input type="number" id="editGlucose" min="0" step="0.1">
+        </label>
+        <label>일시
+          <input type="datetime-local" id="editDatetime" step="1">
+        </label>
+        <label>메모
+          <input type="text" id="editNote" placeholder="선택 입력">
+        </label>
+        <div class="modal-actions">
+          <button type="button" id="editSave">저장</button>
+          <button type="button" id="editDelete" class="btn-danger">삭제</button>
+          <button type="button" id="editCancel" class="btn-ghost">취소</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="glucose-guide.js"></script>
