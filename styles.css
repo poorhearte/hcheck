@@ -290,10 +290,19 @@ table.glucose-guide .mid-num {
   transition: background-color 700ms ease, transform 120ms ease;
 }
 
-/* 길게 누르는 동안 삭제 예고 피드백 */
+/* 길게 누르는 동안 누름 피드백 */
 .record.holding {
-  background: #fde2e2;
   transform: scale(0.99);
+}
+
+/* 혈당: 길게 누르면 수정/삭제 팝업 → 중립(브랜드) 색 */
+.view-glucose .record.holding {
+  background: #e7f0ff;
+}
+
+/* 병원 진료: 길게 누르면 삭제 → 빨강 예고 */
+.view-hospital .record.holding {
+  background: #fde2e2;
 }
 
 .record .left {
