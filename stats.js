@@ -11,7 +11,7 @@
   }
 
   let cache = [];                 // 마지막으로 불러온 전체 기록
-  let mode = 'month';             // 'month' | 'week'
+  let mode = 'week';              // 'month' | 'week' — 기본: 주
   let anchor = startOfDay(new Date()); // 현재 보고 있는 기간 내의 기준 날짜 (기본: 오늘)
 
   function startOfDay(d){ const x = new Date(d); x.setHours(0,0,0,0); return x; }

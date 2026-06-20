@@ -145,10 +145,18 @@ body {
   margin: 0;
 }
 
-/* ① 저장 입력 / ③ 혈당 기준: 내용 높이만큼 고정 */
+/* ① 저장 입력 / ③ 혈당 기준 / 최근 5건 차트: 내용 높이만큼 고정 */
 .panel-input,
-.panel-guide {
+.panel-guide,
+.panel-chart {
   flex: 0 0 auto;
+}
+
+.chart-caption {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0b3a66;
+  margin-bottom: 8px;
 }
 
 /* ② 기록: 남는 공간을 모두 차지하고 내부에서만 스크롤 */
@@ -168,6 +176,24 @@ form {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
+}
+
+/* 입력 폼 2열 행: (혈당 | 일시), (메모 | 저장) */
+.form-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  flex: 1 1 100%;
+  min-width: 0;
+}
+
+.form-row > label {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.form-row > .actions {
+  flex: 0 0 auto;
 }
 
 label {
@@ -314,6 +340,7 @@ table.glucose-guide .sub {
   color: #777;
 }
 
+table.glucose-guide tr.lv-goal th[scope="row"]   { background: #e7f0ff; color: #0b5bbf; }
 table.glucose-guide tr.lv-high th[scope="row"]   { background: #fde2e2; color: #b3261e; }
 table.glucose-guide tr.lv-mid th[scope="row"]    { background: #fef0d9; color: #b5700a; }
 table.glucose-guide tr.lv-normal th[scope="row"] { background: #e3f4e6; color: #1f7a3d; }
@@ -322,6 +349,30 @@ table.glucose-guide tr.lv-normal th[scope="row"] { background: #e3f4e6; color: #
   font-size: 12px;
   color: #777;
   margin: 8px 0 0;
+}
+
+.guide-source {
+  font-size: 12px;
+  color: #999;
+  margin: 4px 0 0;
+  text-align: left;
+}
+
+/* 출처(왼쪽) + 단위(오른쪽)를 같은 줄에 */
+.guide-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.guide-foot p {
+  margin: 0;
+}
+
+.guide-source a {
+  color: #0b79ff;
 }
 
 table.glucose-guide .hi-num {
@@ -543,6 +594,15 @@ table.glucose-guide .mid-num {
   font-size: 22px;
   fill: #475569;
   font-weight: 700;
+}
+
+/* 최근 5건(미니) 그래프 — 날짜·혈당 숫자 더 크게 */
+.glucose-chart.mini .ax {
+  font-size: 30px;
+}
+
+.glucose-chart.mini .ax.val {
+  font-size: 32px;
 }
 
 /* ===== 수정/삭제 팝업 ===== */

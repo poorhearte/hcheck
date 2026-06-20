@@ -10,6 +10,7 @@
 
   // 행(판정 단계). values 순서는 COLUMNS 순서와 동일
   const ROWS = [
+    { label: '관리목표',   cls: 'lv-goal',   values: ['80~130',           '180이하',          '6.5%미만'] },
     { label: '당뇨병',     cls: 'lv-high',   values: ['126이상',          '200이상',          '6.5%이상'] },
     { label: '전단계', cls: 'lv-mid',    values: ['100이상 126 미만', '140이상 200미만', '5.7%이상 6.5%미만'] },
     { label: '정상',       cls: 'lv-normal', values: ['100미만',          '140미만',          '5.7%미만'] }
@@ -42,7 +43,10 @@
           <tbody>${body}</tbody>
         </table>
       </div>
-      <p class="guide-unit">단위: mg/dL (당화혈색소는 %)</p>
+      <div class="guide-foot">
+        <p class="guide-source">출처: <a href="https://www.diabetes.or.kr/general/info/treat/treat_01.php" target="_blank" rel="noopener noreferrer">대한당뇨병학회</a></p>
+        <p class="guide-unit">단위: mg/dL (당화혈색소는 %)</p>
+      </div>
     </details>`;
   }
 

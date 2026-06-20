@@ -66,6 +66,90 @@
     return Number.isInteger(num) ? String(num) : String(num).replace(/\.0+$|(?<=\.[0-9]*[1-9])0+$/,'');
   }
 
+  // 혈당 구간(임의시간/식후 기준) — 점 색상
+  function levelColor(v){
+    if(v < 70)  return '#2f7fd6';   // 저혈당
+    if(v < 140) return '#1f9d4d';   // 정상
+    if(v < 200) return '#ef7d1a';   // 주의
+    return '#d32020';               // 높음
+  }
+
+  // 최근 5건 SVG 선 그래프 (recordsDesc: 최신순 배열)
+  function buildLatestChart(recordsDesc){
+    const data = recordsDesc.slice(0, 5)
+      .map(r => ({ value: Number(r.value), t: new Date(r.timestamp) }))
+      .filter(d => !Number.isNaN(d.value))
+      .reverse(); // 오래된→최신 (왼→오른)
+    if(data.length === 0) return '';
+
+    const WEEKDAYS = ['일','월','화','수','목','금','토'];
+    const W = 640, H = 200;
+    const pad = { top: 28, right: 20, bottom: 40, left: 20 };
+    const innerW = W - pad.left - pad.right;
+    const innerH = H - pad.top - pad.bottom;
+    const n = data.length;
+
+    const values = data.map(d=>d.value);
+    let minV = Math.min(...values), maxV = Math.max(...values);
+    const margin = Math.max(10, (maxV - minV) * 0.15);
+    let dMin = Math.floor((minV - margin) / 10) * 10;
+    let dMax = Math.ceil((maxV + margin) / 10) * 10;
+    if(dMin < 0) dMin = 0;
+    if(dMax === dMin) dMax = dMin + 10;
+
+    const xFor = i => n === 1 ? pad.left + innerW/2 : pad.left + innerW * (i/(n-1));
+    const yFor = v => pad.top + innerH * (1 - (v - dMin)/(dMax - dMin));
+
+    let grid = '';
+    const ticks = 4;
+    for(let i=0; i<=ticks; i++){
+      const v = dMin + (dMax - dMin) * (i/ticks);
+      const y = yFor(v);
+      grid += `<line x1="${pad.left}" y1="${y.toFixed(1)}" x2="${W-pad.right}" y2="${y.toFixed(1)}" stroke="#eef3fb"/>`;
+    }
+
+    const linePts = data.map((d,i)=> `${xFor(i).toFixed(1)},${yFor(d.value).toFixed(1)}`).join(' ');
+    const polyline = n > 1 ? `<polyline points="${linePts}" fill="none" stroke="#0b79ff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>` : '';
+
+    let dots = '';
+    data.forEach((d,i)=>{
+      const x = xFor(i), y = yFor(d.value);
+      dots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.5" fill="${levelColor(d.value)}" stroke="#fff" stroke-width="2"/>`;
+      dots += `<text x="${x.toFixed(1)}" y="${(y-14).toFixed(1)}" text-anchor="middle" class="ax val">${formatGlucoseValue(d.value)}</text>`;
+      let dAnchor = 'middle';
+      if(n > 1 && i === 0) dAnchor = 'start';
+      else if(n > 1 && i === n-1) dAnchor = 'end';
+      dots += `<text x="${x.toFixed(1)}" y="${H-12}" text-anchor="${dAnchor}" class="ax">${d.t.getMonth()+1}/${d.t.getDate()}${WEEKDAYS[d.t.getDay()]}</text>`;
+    });
+
+    return `<svg viewBox="0 0 ${W} ${H}" class="glucose-chart mini" role="img" aria-label="최근 5건 혈당 그래프">`
+      + grid + polyline + dots + `</svg>`;
+  }
+
+  function renderLatestChart(recordsDesc){
+    const panel = document.getElementById('glucoseChartPanel');
+    const el = document.getElementById('glucoseMiniChart');
+    if(!panel || !el) return;
+    if(recordsDesc.length === 0){
+      panel.hidden = true;
+      el.innerHTML = '';
+      return;
+    }
+    el.innerHTML = buildLatestChart(recordsDesc);
+
+    // 캡션: 최근 5건 평균(반올림)
+    const caption = document.getElementById('chartCaption');
+    if(caption){
+      const vals = recordsDesc.slice(0, 5).map(r => Number(r.value)).filter(v => !Number.isNaN(v));
+      if(vals.length){
+        const avg = Math.round(vals.reduce((s,v)=>s+v,0) / vals.length);
+        caption.textContent = `평균: ${avg} mg/dL (최근 5건)`;
+      }
+    }
+
+    panel.hidden = false;
+  }
+
   async function deleteRecord(id){
     try{
       const response = await fetch(API_PATH, {
@@ -88,15 +172,18 @@
     listEl.innerHTML = '';
 
     if(records.length===0){
+      renderLatestChart([]);
       listEl.innerHTML = '<li class="empty">기록이 없습니다.</li>';
       statsEl.textContent = lastFetchError ? '서버에서 데이터를 가져올 수 없습니다. 콘솔을 확인하세요.' : '';
       return;
     }
 
+    renderLatestChart(records);
+
     const latest = records[0];
     const avgValue = records.reduce((s,r)=>s+Number(r.value),0)/records.length;
     const avg = Math.round(avgValue);
-    statsEl.innerHTML = `<strong>평균:</strong> ${avg} mg/dL (총 ${records.length}건)`;
+    // statsEl.innerHTML = `<strong>평균:</strong> ${avg} mg/dL (총 ${records.length}건)`;
 
     records.forEach(r=>{
       const li = document.createElement('li');
